@@ -1,132 +1,94 @@
 import { User } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
+import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import prisma from '../../../shared/prisma';
 
-const createNewUser = async (data: User): Promise<User> => {
-  console.log(data);
-  // const result = await prisma.user.create({
-  //   data,
-  // });
-  // return result;
+type IUserReturn = {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  contactNo: string;
+  profileImg: string;
+  address: string;
 };
 
-// const getAllFromDB = async (
-//   filters: IStudentFilterRequest,
-//   options: IPaginationOptions
-// ): Promise<IGenericResponse<Student[]>> => {
-//   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
-//   const { searchTerm, ...filterData } = filters;
+const createNewUser = async (data: User): Promise<IUserReturn> => {
+  const { password, ...newUserData } = data;
 
-//   const andConditions = [];
+  const hashedPassword = await bcrypt.hash(
+    password,
+    Number(config.bcrypt_salt_rounds)
+  );
+  const result = await prisma.user.create({
+    data: {
+      password: hashedPassword,
+      ...newUserData,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+  return result;
+};
 
-//   if (searchTerm) {
-//     andConditions.push({
-//       OR: studentSearchableFields.map(field => ({
-//         [field]: {
-//           contains: searchTerm,
-//           mode: 'insensitive',
-//         },
-//       })),
-//     });
-//   }
+type IUserLogin = {
+  email: string;
+  password: string;
+};
+type IUserLoginResponse = {
+  accessToken: string;
+};
 
-//   if (Object.keys(filterData).length > 0) {
-//     andConditions.push({
-//       AND: Object.keys(filterData).map(key => {
-//         if (studentRelationalFields.includes(key)) {
-//           return {
-//             [studentRelationalFieldsMapper[key]]: {
-//               id: (filterData as any)[key],
-//             },
-//           };
-//         } else {
-//           return {
-//             [key]: {
-//               equals: (filterData as any)[key],
-//             },
-//           };
-//         }
-//       }),
-//     });
-//   }
+const userLogin = async (
+  loginData: IUserLogin
+): Promise<IUserLoginResponse | null> => {
+  const { email, password } = loginData;
 
-//   const whereConditions: Prisma.StudentWhereInput =
-//     andConditions.length > 0 ? { AND: andConditions } : {};
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
 
-//   const result = await prisma.student.findMany({
-//     include: {
-//       academicFaculty: true,
-//       academicDepartment: true,
-//       academicSemester: true,
-//     },
-//     where: whereConditions,
-//     skip,
-//     take: limit,
-//     orderBy:
-//       options.sortBy && options.sortOrder
-//         ? { [options.sortBy]: options.sortOrder }
-//         : {
-//             createdAt: 'desc',
-//           },
-//   });
-//   const total = await prisma.student.count({
-//     where: whereConditions,
-//   });
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found !!');
+  }
 
-//   return {
-//     meta: {
-//       total,
-//       page,
-//       limit,
-//     },
-//     data: result,
-//   };
-// };
+  const isPasswordValid = await bcrypt.compare(password, isUserExist?.password);
 
-// const getByIdFromDB = async (id: string): Promise<Student | null> => {
-//   const result = await prisma.student.findUnique({
-//     where: {
-//       id,
-//     },
-//     include: {
-//       academicFaculty: true,
-//       academicDepartment: true,
-//       academicSemester: true,
-//     },
-//   });
-//   return result;
-// };
+  if (isUserExist && !isPasswordValid) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect !!');
+  }
 
-// const updateIntoDB = async (
-//   id: string,
-//   payload: Partial<Student>
-// ): Promise<Student> => {
-//   const result = await prisma.student.update({
-//     where: {
-//       id,
-//     },
-//     data: payload,
-//     include: {
-//       academicSemester: true,
-//       academicDepartment: true,
-//       academicFaculty: true,
-//     },
-//   });
-//   return result;
-// };
+  const { id: userId, role } = isUserExist;
 
-// const deleteStudent = async (id: string): Promise<Student> => {
-//   const result = await prisma.student.delete({
-//     where: {
-//       id,
-//     },
-//     include: {
-//       academicSemester: true,
-//       academicDepartment: true,
-//       academicFaculty: true,
-//     },
-//   });
-//   return result;
-// };
+  // create access token & refresh token
+  const accessToken = jwtHelpers.createToken(
+    {
+      role,
+      userId,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  return {
+    accessToken,
+  };
+};
 
 export const UserAuthService = {
   createNewUser,
+  userLogin,
 };

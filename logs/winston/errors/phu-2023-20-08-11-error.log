@@ -1,0 +1,48 @@
+Sun Aug 20 2023 11:34:21 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Cannot read properties of undefined (reading 'page')
+Sun Aug 20 2023 11:35:11 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Cannot read properties of undefined (reading 'page')
+Sun Aug 20 2023 11:35:29 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Cannot read properties of undefined (reading 'page')
+Sun Aug 20 2023 11:35:41 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ Cannot read properties of undefined (reading 'page')
+Sun Aug 20 2023 11:43:57 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.academicSemester.findMany()` invocation in
+C:\Level-2\core-service\src\app\modules\academicSemester\academicSemester.service.ts:35:48
+
+  32     })),
+  33   });
+  34 }
+→ 35 const result = await prisma.academicSemester.findMany({
+       where: [
+         {
+           OR: [
+             {
+               title: {
+                 contains: "02",
+                 mode: "insensitive"
+               }
+             },
+             {
+               code: {
+                 contains: "02",
+                 mode: "insensitive"
+               }
+             },
+             {
+               startMonth: {
+                 contains: "02",
+                 mode: "insensitive"
+               }
+             },
+             {
+               endMonth: {
+                 contains: "02",
+                 mode: "insensitive"
+               }
+             }
+           ]
+         }
+       ],
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       skip: 0,
+       take: 2
+     })
+
+Argument `where`: Invalid value provided. Expected AcademicSemesterWhereInput, provided (Object).

@@ -6,16 +6,11 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
-
-type IUserReturn = {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  contactNo: string;
-  profileImg: string;
-  address: string;
-};
+import {
+  IUserLogin,
+  IUserLoginResponse,
+  IUserReturn,
+} from './userAuth.interface';
 
 const createNewUser = async (data: User): Promise<IUserReturn> => {
   const { password, ...newUserData } = data;
@@ -40,14 +35,6 @@ const createNewUser = async (data: User): Promise<IUserReturn> => {
     },
   });
   return result;
-};
-
-type IUserLogin = {
-  email: string;
-  password: string;
-};
-type IUserLoginResponse = {
-  accessToken: string;
 };
 
 const userLogin = async (

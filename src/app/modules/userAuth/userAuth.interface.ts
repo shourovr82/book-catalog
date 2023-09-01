@@ -1,69 +1,16 @@
-export type IStudentFilterRequest = {
-  searchTerm?: string | undefined;
-  academicFacultyId?: string | undefined;
-  academicDepartmentId?: string | undefined;
-  academicSemesterId?: string | undefined;
-  studentId?: string | undefined;
-  email?: string | undefined;
-  contactNo?: string | undefined;
-  gender?: string | undefined;
-  bloodGroup?: string | undefined;
-};
-
-export type IStudentMyCoursesRequest = {
-  academicSemesterId?: string | undefined;
-  courseId?: string | undefined;
-};
-
-export type IStudentMyCourseSchedulesRequest = {
-  academicSemesterId?: string | undefined;
-  courseId?: string | undefined;
-};
-
-export type StudentCreatedEvent = {
+export type IUserReturn = {
   id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
-  dateOfBirth: string;
-  gender: string;
-  bloodGroup: string;
+  name: string;
+  role: string;
   email: string;
   contactNo: string;
-  profileImage: string;
-  academicFaculty: {
-    syncId: string;
-  };
-  academicDepartment: {
-    syncId: string;
-  };
-  academicSemester: {
-    syncId: string;
-  };
+  profileImg: string;
+  address: string;
 };
-
-export type StudentUpdatedEvent = {
-  id: string;
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
-  dateOfBirth: string;
-  gender: string;
-  bloodGroup: string;
+export type IUserLogin = {
   email: string;
-  contactNo: string;
-  profileImage: string;
-  academicFaculty: {
-    syncId: string;
-  };
-  academicDepartment: {
-    syncId: string;
-  };
-  academicSemester: {
-    syncId: string;
-  };
+  password: string;
+};
+export type IUserLoginResponse = {
+  accessToken: string;
 };

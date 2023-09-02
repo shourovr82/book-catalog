@@ -59,6 +59,26 @@
             "date": 1693645534164,
             "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-15-error.log",
             "hash": "a389c0ba0646d6d3e39b386c9ad075f7a5ddbc8cfe761682925e1e70a6e6d2a4"
+        },
+        {
+            "date": 1693661348500,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-19-error.log",
+            "hash": "4af476a595f5be450bdd7f9b784d7d9eb042aabc0b66c34d430e4379941ec1c1"
+        },
+        {
+            "date": 1693663226802,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-20-error.log",
+            "hash": "189b94e33bbb68d8058b7d3afb1e96d1723d9f4b2d1e27251b9bbeee82905b29"
+        },
+        {
+            "date": 1693666805981,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-21-error.log",
+            "hash": "d72a419cb3591d791260c32545e65727dff3fd948a800a58fc9b529c6ebc6e3e"
+        },
+        {
+            "date": 1693670469513,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-22-error.log",
+            "hash": "fbd7e208d91c5140db42011193b64e014590c40293619677dd9c9d329c0676c4"
         }
     ],
     "hashType": "sha256"

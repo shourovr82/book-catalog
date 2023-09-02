@@ -13,5 +13,4 @@ const pick = <T extends Record<string, unknown>, k extends keyof T>(
   }
   return finalObj;
 };
-
 export default pick;

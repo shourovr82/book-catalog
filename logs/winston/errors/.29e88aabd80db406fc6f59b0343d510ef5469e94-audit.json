@@ -79,6 +79,16 @@
             "date": 1693670469513,
             "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-22-error.log",
             "hash": "fbd7e208d91c5140db42011193b64e014590c40293619677dd9c9d329c0676c4"
+        },
+        {
+            "date": 1693677558014,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-02-09-23-error.log",
+            "hash": "ed531e5d5e474dfe87f83fc1a544453ca63fd031e067f30454739df584a935b7"
+        },
+        {
+            "date": 1693677605278,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\errors\\phu-2023-03-09-00-error.log",
+            "hash": "513bd93fd375e87292cf99587a8d6de6baa3a91bab7d5ba90d9732886d23c42a"
         }
     ],
     "hashType": "sha256"

@@ -2,6 +2,7 @@ import express from 'express';
 
 import { BooksRoutes } from '../modules/book/book.routes';
 import { CategoriesRoutes } from '../modules/category/category.routes';
+import { OrderRoutes } from '../modules/orders/orders.routes';
 import { ProfileRoutes } from '../modules/profile/profile.routes';
 import { UserAuthRoutes } from '../modules/userAuth/userAuth.routes';
 import { UsersRoutes } from '../modules/users/users.routes';
@@ -28,6 +29,10 @@ const moduleRoutes = [
   {
     path: '/books',
     route: BooksRoutes,
+  },
+  {
+    path: '/orders',
+    route: OrderRoutes,
   },
 ];
 

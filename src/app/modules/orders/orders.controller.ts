@@ -18,52 +18,31 @@ const createNewOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllCategories = catchAsync(async (req: Request, res: Response) => {
-//   const result = await CategoriesService.getAllCategories();
+const getAllOrders = catchAsync(async (req: Request, res: Response) => {
+  const token = req.headers?.authorization;
+  const result = await OrderService.getAllOrders(token as string);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Categories fetched  successfully!',
-//     data: result,
-//   });
-// });
-// const getSingleCategory = catchAsync(async (req: Request, res: Response) => {
-//   const id = req.params?.id;
-//   const result = await CategoriesService.getSingleCategory(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Orders retrieved  successfully!',
+    data: result,
+  });
+});
+const getSingleOrder = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params?.id;
+  const result = await OrderService.getSingleOrder(id);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Category fetched  successfully!',
-//     data: result,
-//   });
-// });
-// const updateCategory = catchAsync(async (req: Request, res: Response) => {
-//   const id = req.params?.id;
-//   const data = req.body;
-//   const result = await CategoriesService.updateCategory(id, data);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Category updated successfully!',
-//     data: result,
-//   });
-// });
-// const deleteCategory = catchAsync(async (req: Request, res: Response) => {
-//   const id = req.params?.id;
-
-//   const result = await CategoriesService.deleteCategory(id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Category Deleted successfully!',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order fetched  successfully!',
+    data: result,
+  });
+});
 
 export const OrderController = {
   createNewOrder,
+  getAllOrders,
+  getSingleOrder,
 };

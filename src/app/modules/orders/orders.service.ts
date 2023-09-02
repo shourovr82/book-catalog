@@ -48,8 +48,6 @@ const getAllOrders = async (token: string) => {
     },
   });
 
-  console.log(decodedToken);
-
   //
   if (!isUserExist) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User is not Exist');
@@ -107,30 +105,79 @@ const getAllOrders = async (token: string) => {
 
   return result;
 };
-const getSingleOrder = async (id: string) => {
-  const result = await prisma.order.findUnique({
+const getSingleOrder = async (token: string, id: string) => {
+  let decodedToken;
+  try {
+    decodedToken = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+  } catch (error) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid access Token');
+  }
+  const isUserExist = await prisma.user.findUnique({
     where: {
-      id,
-    },
-    select: {
-      id: true,
-      status: true,
-      userId: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          address: true,
-          email: true,
-          contactNo: true,
-        },
-      },
-      orderedBooks: true,
+      id: decodedToken.userId,
     },
   });
 
+  //
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User is not Exist');
+  }
+
+  let result = null;
+  if (isUserExist && isUserExist.role === ENUM_USER_ROLE.ADMIN) {
+    result = await prisma.order.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        status: true,
+        userId: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            email: true,
+            contactNo: true,
+            role: true,
+          },
+        },
+        orderedBooks: true,
+      },
+    });
+  }
+  if (isUserExist && isUserExist.role === ENUM_USER_ROLE.CUSTOMER) {
+    console.log(id, decodedToken.userId);
+    result = await prisma.order.findUnique({
+      where: {
+        id,
+        userId: decodedToken.userId,
+      },
+      select: {
+        id: true,
+        status: true,
+        userId: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            email: true,
+            contactNo: true,
+            role: true,
+          },
+        },
+        orderedBooks: true,
+      },
+    });
+  }
+
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Category not found !!');
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You are not Authorized User !!'
+    );
   }
 
   return result;

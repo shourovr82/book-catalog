@@ -14,9 +14,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const config_1 = __importDefault(require("../../../config"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const jwtHelpers_1 = require("../../../helpers/jwtHelpers");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
-const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUsers = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    let decodedToken;
+    try {
+        decodedToken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.secret);
+    }
+    catch (error) {
+        throw new ApiError_1.default(http_status_1.default.FORBIDDEN, 'Invalid access Token');
+    }
+    const isUserExist = yield prisma_1.default.user.findUnique({
+        where: {
+            id: decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.userId,
+        },
+    });
+    if (!isUserExist) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'User Not Exist');
+    }
     const result = yield prisma_1.default.user.findMany({
         select: {
             id: true,

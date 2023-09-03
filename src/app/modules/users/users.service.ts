@@ -1,9 +1,30 @@
 import { User } from '@prisma/client';
 import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 
-const getAllUsers = async () => {
+const getAllUsers = async (token: string) => {
+  let decodedToken;
+
+  try {
+    decodedToken = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+  } catch (error) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid access Token');
+  }
+
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: decodedToken?.userId,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User Not Exist');
+  }
+
   const result = await prisma.user.findMany({
     select: {
       id: true,

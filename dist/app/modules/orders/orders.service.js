@@ -116,6 +116,14 @@ const getSingleOrder = (token, id) => __awaiter(void 0, void 0, void 0, function
     if (!isUserExist) {
         throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'User is not Exist');
     }
+    const isOrderExist = yield prisma_1.default.order.findUnique({
+        where: {
+            id,
+        },
+    });
+    if (!isOrderExist) {
+        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Order is not Exist');
+    }
     let result = null;
     if (isUserExist && isUserExist.role === user_1.ENUM_USER_ROLE.ADMIN) {
         result = yield prisma_1.default.order.findUnique({
@@ -141,7 +149,15 @@ const getSingleOrder = (token, id) => __awaiter(void 0, void 0, void 0, function
         });
     }
     if (isUserExist && isUserExist.role === user_1.ENUM_USER_ROLE.CUSTOMER) {
-        console.log(id, decodedToken.userId);
+        const isOwner = yield prisma_1.default.order.findUnique({
+            where: {
+                id,
+                userId: decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.userId,
+            },
+        });
+        if (!isOwner) {
+            throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not the owner of this order');
+        }
         result = yield prisma_1.default.order.findUnique({
             where: {
                 id,

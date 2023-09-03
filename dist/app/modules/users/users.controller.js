@@ -18,17 +18,19 @@ const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const users_service_1 = require("./users.service");
 const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield users_service_1.UsersService.getAllUsers();
+    var _a;
+    const token = (_a = req.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+    const result = yield users_service_1.UsersService.getAllUsers(token);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'User created successfully!',
+        message: 'User retrieved  successfully!',
         data: result,
     });
 }));
 const getSingleUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const id = (_a = req.params) === null || _a === void 0 ? void 0 : _a.id;
+    var _b;
+    const id = (_b = req.params) === null || _b === void 0 ? void 0 : _b.id;
     const result = yield users_service_1.UsersService.getSingleUser(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
@@ -38,8 +40,8 @@ const getSingleUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const updateUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const id = (_b = req.params) === null || _b === void 0 ? void 0 : _b.id;
+    var _c;
+    const id = (_c = req.params) === null || _c === void 0 ? void 0 : _c.id;
     const data = req.body;
     const result = yield users_service_1.UsersService.updateUser(id, data);
     (0, sendResponse_1.default)(res, {
@@ -50,8 +52,8 @@ const updateUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     });
 }));
 const deleteUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
-    const id = (_c = req.params) === null || _c === void 0 ? void 0 : _c.id;
+    var _d;
+    const id = (_d = req.params) === null || _d === void 0 ? void 0 : _d.id;
     const result = yield users_service_1.UsersService.deleteUser(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

@@ -5,12 +5,14 @@ import sendResponse from '../../../shared/sendResponse';
 import { UsersService } from './users.service';
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await UsersService.getAllUsers();
+  const token = req.headers?.authorization;
+
+  const result = await UsersService.getAllUsers(token as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User created successfully!',
+    message: 'User retrieved  successfully!',
     data: result,
   });
 });

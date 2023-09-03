@@ -156,24 +156,6 @@ const getBookByCategory = (categoryId, options) => __awaiter(void 0, void 0, voi
     if (!isExistCategory) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Category Not Exist');
     }
-    //   skip,
-    //   orderBy:
-    //     options.sortBy && options.sortOrder
-    //       ? { [options.sortBy]: options.sortOrder }
-    //       : {
-    //           price: 'desc',
-    //         },
-    // });
-    // const totalPage = Math.ceil(total / size);
-    // return {
-    //   meta: {
-    //     total,
-    //     page,
-    //     size,
-    //     totalPage,
-    //   },
-    //   data: result,
-    // };
     const result = yield prisma_1.default.book.findMany({
         where: {
             categoryId,
@@ -198,9 +180,9 @@ const getBookByCategory = (categoryId, options) => __awaiter(void 0, void 0, voi
     }
     return {
         meta: {
-            total,
             page,
             size,
+            total,
             totalPage,
         },
         data: result,

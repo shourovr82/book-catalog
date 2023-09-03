@@ -25,67 +25,49 @@ const getAllBooks = async (
   const { size, page, skip } = paginationHelpers.calculatePagination(options);
   const { search, minPrice, maxPrice, ...filterData } = filters;
 
-  const andConditions = [];
-  const orConditions = [];
-  if (search || maxPrice || minPrice) {
-    if (search) {
-      orConditions.push({
-        OR: booksFilterableFields.map(field => ({
-          [field]: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        })),
+  const conditions = [];
+
+  if (search) {
+    conditions.push({
+      OR: booksFilterableFields.map(field => ({
+        [field]: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  if (minPrice) {
+    const minPriceFloat = parseFloat(minPrice);
+    if (!isNaN(minPriceFloat)) {
+      conditions.push({
+        OR: [{ price: { gte: minPriceFloat } }],
       });
     }
+  }
 
-    if (maxPrice) {
-      const maxPriceFloat = parseFloat(maxPrice);
-      if (!isNaN(maxPriceFloat)) {
-        orConditions.push({
-          OR: [{ price: { lte: maxPriceFloat } }],
-        });
-      }
-    }
-
-    if (minPrice) {
-      const minPriceFloat = parseFloat(minPrice);
-
-      if (!isNaN(minPriceFloat)) {
-        orConditions.push({
-          OR: [{ price: { gte: minPriceFloat } }],
-        });
-      }
+  if (maxPrice) {
+    const maxPriceFloat = parseFloat(maxPrice);
+    if (!isNaN(maxPriceFloat)) {
+      conditions.push({
+        OR: [{ price: { lte: maxPriceFloat } }],
+      });
     }
   }
 
   if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map(key => {
-        return {
-          categoryId: {
-            equals: (filterData as any)[key],
-          },
-        };
-      }),
+    conditions.push({
+      AND: Object.keys(filterData).map(key => ({
+        categoryId: {
+          equals: (filterData as any)[key],
+        },
+      })),
     });
   }
-  let whereConditions: Prisma.BookWhereInput = {};
 
-  if (andConditions.length > 0 && orConditions.length > 0) {
-    whereConditions = {
-      AND: andConditions,
-      OR: orConditions,
-    };
-  } else if (andConditions.length > 0) {
-    whereConditions = {
-      AND: andConditions,
-    };
-  } else if (orConditions.length > 0) {
-    whereConditions = {
-      OR: orConditions,
-    };
-  }
+  const whereConditions: Prisma.BookWhereInput =
+    conditions.length > 1 ? { AND: conditions } : conditions[0] || {};
 
   const result = await prisma.book.findMany({
     include: {

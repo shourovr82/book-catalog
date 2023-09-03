@@ -5,15 +5,7 @@ import { ENUM_USER_ROLE } from '../../../enums/user';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
-
-type OrderBook = {
-  bookId: string;
-  quantity: number;
-};
-
-type IOrderRequest = {
-  orderedBooks: OrderBook[];
-};
+import { IOrderRequest } from './orders.interface';
 
 const createNewOrder = async (data: IOrderRequest, token: string) => {
   let decodedToken;

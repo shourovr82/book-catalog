@@ -14,3 +14,11 @@ export type IUserLogin = {
 export type IUserLoginResponse = {
   accessToken: string;
 };
+export type OrderBook = {
+  bookId: string;
+  quantity: number;
+};
+
+export type IOrderRequest = {
+  orderedBooks: OrderBook[];
+};

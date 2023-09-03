@@ -67,13 +67,25 @@ const deleteCategory = async (id: string) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Category not found !!');
   }
 
-  const result = await prisma.category.delete({
-    where: {
-      id,
-    },
-  });
+  const responseData = await prisma.$transaction(async transactionClient => {
+    await transactionClient.book.deleteMany({
+      where: {
+        categoryId: id,
+      },
+    });
 
-  return result;
+    const result = await transactionClient.category.delete({
+      where: {
+        id,
+      },
+    });
+    if (!result) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Unable to Update Course');
+    }
+
+    return result;
+  });
+  return responseData;
 };
 
 export const CategoriesService = {

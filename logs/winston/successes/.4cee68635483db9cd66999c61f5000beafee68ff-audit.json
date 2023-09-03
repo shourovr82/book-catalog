@@ -94,6 +94,16 @@
             "date": 1693681902878,
             "name": "C:\\Level-2\\book-catalog\\logs\\winston\\successes\\phu-2023-03-09-01-success.log",
             "hash": "29cf733f3d5ba0518fb272ba467b9a81cea8f3cfcbd1dd6ca398473aacb8229c"
+        },
+        {
+            "date": 1693709994354,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\successes\\phu-2023-03-09-08-success.log",
+            "hash": "96ee1f65097f331d5f0e5046b7ed34cbe6a2243cc61d31a69f84ebb57bb4f2ee"
+        },
+        {
+            "date": 1693710001426,
+            "name": "C:\\Level-2\\book-catalog\\logs\\winston\\successes\\phu-2023-03-09-09-success.log",
+            "hash": "3373c07a4be7d105103fd04ef1da1bd2b6bb41d80a6b3e8aabb7843b69d85c50"
         }
     ],
     "hashType": "sha256"

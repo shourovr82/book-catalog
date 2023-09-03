@@ -71,7 +71,8 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
 });
 const getBookByCategory = catchAsync(async (req: Request, res: Response) => {
   const categoryId = req.params?.categoryId;
-  const result = await BooksService.getBookByCategory(categoryId);
+  const options = pick(req.query, ['size', 'page', 'sortBy', 'sortOrder']);
+  const result = await BooksService.getBookByCategory(categoryId, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

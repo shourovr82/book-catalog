@@ -80,7 +80,8 @@ const deleteBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 const getBookByCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _d;
     const categoryId = (_d = req.params) === null || _d === void 0 ? void 0 : _d.categoryId;
-    const result = yield book_service_1.BooksService.getBookByCategory(categoryId);
+    const options = (0, pick_1.default)(req.query, ['size', 'page', 'sortBy', 'sortOrder']);
+    const result = yield book_service_1.BooksService.getBookByCategory(categoryId, options);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

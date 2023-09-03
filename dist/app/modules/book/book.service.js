@@ -150,24 +150,61 @@ const deleteBook = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
-const getBookByCategory = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
+const getBookByCategory = (categoryId, options) => __awaiter(void 0, void 0, void 0, function* () {
+    const { size, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
     const isExistCategory = yield prisma_1.default.category.findMany({});
     if (!isExistCategory) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Category Not Exist');
     }
+    //   skip,
+    //   orderBy:
+    //     options.sortBy && options.sortOrder
+    //       ? { [options.sortBy]: options.sortOrder }
+    //       : {
+    //           price: 'desc',
+    //         },
+    // });
+    // const totalPage = Math.ceil(total / size);
+    // return {
+    //   meta: {
+    //     total,
+    //     page,
+    //     size,
+    //     totalPage,
+    //   },
+    //   data: result,
+    // };
     const result = yield prisma_1.default.book.findMany({
         where: {
             categoryId,
         },
+        skip,
+        take: size,
         include: {
             category: true,
             reviewAndRatings: true,
         },
     });
+    const total = yield prisma_1.default.book.count({
+        where: {
+            categoryId,
+        },
+        skip,
+        take: size,
+    });
+    const totalPage = Math.ceil(total / size);
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Book Not Found on this category !!');
     }
-    return result;
+    return {
+        meta: {
+            total,
+            page,
+            size,
+            totalPage,
+        },
+        data: result,
+    };
 });
 exports.BooksService = {
     createNewBook,

@@ -154,24 +154,56 @@ const deleteBook = async (id: string): Promise<Book | null> => {
   return result;
 };
 const getBookByCategory = async (
-  categoryId: string
-): Promise<Book[] | null> => {
+  categoryId: string,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Book[] | null>> => {
+  const { size, page, skip } = paginationHelpers.calculatePagination(options);
+
   const isExistCategory = await prisma.category.findMany({});
 
   if (!isExistCategory) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Category Not Exist');
   }
 
+  //   skip,
+  //   orderBy:
+  //     options.sortBy && options.sortOrder
+  //       ? { [options.sortBy]: options.sortOrder }
+  //       : {
+  //           price: 'desc',
+  //         },
+  // });
+  // const totalPage = Math.ceil(total / size);
+  // return {
+  //   meta: {
+  //     total,
+  //     page,
+  //     size,
+  //     totalPage,
+  //   },
+  //   data: result,
+  // };
+
   const result = await prisma.book.findMany({
     where: {
       categoryId,
     },
+    skip,
+    take: size,
     include: {
       category: true,
       reviewAndRatings: true,
     },
   });
 
+  const total = await prisma.book.count({
+    where: {
+      categoryId,
+    },
+    skip,
+    take: size,
+  });
+  const totalPage = Math.ceil(total / size);
   if (!result) {
     throw new ApiError(
       httpStatus.NOT_FOUND,
@@ -179,7 +211,15 @@ const getBookByCategory = async (
     );
   }
 
-  return result;
+  return {
+    meta: {
+      page,
+      size,
+      total,
+      totalPage,
+    },
+    data: result,
+  };
 };
 export const BooksService = {
   createNewBook,

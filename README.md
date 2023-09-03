@@ -2,6 +2,8 @@
 
 # A Book Catalog Backend Server
 
+Live Link : https://book-catalog-shourovr82.vercel.app/api/v1
+
 <hr>
 ### Server Description:
 
@@ -16,7 +18,7 @@ It seamlessly integrates with a relational database to store book-related data a
 - Prisma as the Object Relational Mapping (ORM)
 - postgreSQL as the database
 
-### Live Link: https://example.com
+### Live Link: https://book-catalog-shourovr82.vercel.app/api/v1
 
 ### Application Routes:
 

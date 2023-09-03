@@ -14,7 +14,6 @@ const createNewOrder = async (data: IOrderRequest, token: string) => {
   } catch (error) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid access Token');
   }
-
   const orderData = {
     userId: decodedToken.userId,
     ...data,
@@ -115,6 +114,15 @@ const getSingleOrder = async (token: string, id: string) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User is not Exist');
   }
 
+  const isOrderExist = await prisma.order.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!isOrderExist) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Order is not Exist');
+  }
+
   let result = null;
   if (isUserExist && isUserExist.role === ENUM_USER_ROLE.ADMIN) {
     result = await prisma.order.findUnique({
@@ -139,8 +147,22 @@ const getSingleOrder = async (token: string, id: string) => {
       },
     });
   }
+
   if (isUserExist && isUserExist.role === ENUM_USER_ROLE.CUSTOMER) {
-    console.log(id, decodedToken.userId);
+    const isOwner = await prisma.order.findUnique({
+      where: {
+        id,
+        userId: decodedToken?.userId,
+      },
+    });
+
+    if (!isOwner) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        'You are not the owner of this order'
+      );
+    }
+
     result = await prisma.order.findUnique({
       where: {
         id,

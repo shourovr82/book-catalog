@@ -165,25 +165,6 @@ const getBookByCategory = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Category Not Exist');
   }
 
-  //   skip,
-  //   orderBy:
-  //     options.sortBy && options.sortOrder
-  //       ? { [options.sortBy]: options.sortOrder }
-  //       : {
-  //           price: 'desc',
-  //         },
-  // });
-  // const totalPage = Math.ceil(total / size);
-  // return {
-  //   meta: {
-  //     total,
-  //     page,
-  //     size,
-  //     totalPage,
-  //   },
-  //   data: result,
-  // };
-
   const result = await prisma.book.findMany({
     where: {
       categoryId,

@@ -47,7 +47,7 @@ model Book {
   publicationDate  String
   categoryId       String
   createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt()
+  updatedAt        DateTime          @updatedAt
   category         Category          @relation(fields: [categoryId], references: [id])
   reviewAndRatings ReviewAndRating[]
 

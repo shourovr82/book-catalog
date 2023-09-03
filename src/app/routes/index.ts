@@ -23,16 +23,16 @@ const moduleRoutes = [
     route: CategoriesRoutes,
   },
   {
-    path: '/profile',
-    route: ProfileRoutes,
-  },
-  {
     path: '/books',
     route: BooksRoutes,
   },
   {
     path: '/orders',
     route: OrderRoutes,
+  },
+  {
+    path: '/profile',
+    route: ProfileRoutes,
   },
 ];
 

@@ -66,7 +66,7 @@ Ensure you have latest Node.js, Typescript, postgresql and npm (Node Package Man
 Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/shourovr82/rexrox-tech.git
+git clone https://github.com/shourovr82/book-catalog.git
 ```
 
 Step 2: Navigate to the project folder:
